@@ -243,12 +243,42 @@ function cartPage(){
  document.querySelector('#app').innerHTML=`${nav()}<main class="inner-page"><div class="page-intro compact"><span class="eyebrow">Keranjang kamu</span><h1>Pesanan kamu</h1><p>Periksa menu sebelum melanjutkan pembayaran.</p></div><div id="cartRoot"></div></main>${footer()}`
  const render=()=>{
   const c=getCart(),sub=c.reduce((s,x)=>s+x.price*x.qty,0),del=sub>=150000||!c.length?0:15000
-  document.querySelector('#cartRoot').innerHTML=!c.length?`<div class="empty-state"><h2>Keranjang masih kosong</h2><p>Pilih menu yang kamu suka untuk mulai memesan.</p><a class="btn primary" href="menu.html">Lihat Menu</a></div>`:`<div class="cart-layout"><section class="cart-list">${c.map(x=>`<div class="cart-row"><img src="${x.img}" alt="${x.name}"><div class="cart-info"><h3>${x.name}</h3><span>${x.category}</span><b>${rupiah(x.price)}</b></div><div class="quantity"><button data-minus="${x.id}">−</button><b>${x.qty}</b><button data-plus="${x.id}">+</button></div><button class="remove" data-remove="${x.id}">Hapus</button></div>`).join('')}</section><aside class="summary"><h3>Ringkasan pesanan</h3><div><span>Subtotal</span><b>${rupiah(sub)}</b></div><div><span>Ongkir</span><b>${del?rupiah(del):'Gratis'}</b></div><hr><div class="total"><span>Total</span><b>${rupiah(sub+del)}</b></div><a class="btn primary full" href="checkout.html">Lanjut ke pembayaran</a></aside></div>`
+  document.querySelector('#cartRoot').innerHTML=!c.length?`<div class="empty-state"><h2>Keranjang masih kosong</h2><p>Pilih menu yang kamu suka untuk mulai memesan.</p>${c.length?`<a class="btn primary full" href="checkout.html">Lanjut ke pembayaran</a>`:''}</div>`:`<div class="cart-layout"><section class="cart-list">${c.map(x=>`<div class="cart-row"><img src="${x.img}" alt="${x.name}"><div class="cart-info"><h3>${x.name}</h3><span>${x.category}</span><b>${rupiah(x.price)}</b></div><div class="quantity"><button data-minus="${x.id}">−</button><b>${x.qty}</b><button data-plus="${x.id}">+</button></div><button class="remove" data-remove="${x.id}">Hapus</button></div>`).join('')}</section><aside class="summary"><h3>Ringkasan pesanan</h3><div><span>Subtotal</span><b>${rupiah(sub)}</b></div><div><span>Ongkir</span><b>${del?rupiah(del):'Gratis'}</b></div><hr><div class="total"><span>Total</span><b>${rupiah(sub+del)}</b></div><a class="btn primary full" href="checkout.html">Lanjut ke pembayaran</a></aside></div>`
   document.querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>change(b.dataset.plus,1))
   document.querySelectorAll('[data-minus]').forEach(b=>b.onclick=()=>change(b.dataset.minus,-1))
-  document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{setCart(getCart().filter(x=>x.id!==Number(b.dataset.remove)));render()})
+  document.querySelectorAll('[data-remove]').forEach(b=>{
+ b.onclick=()=>{
+  const itemId=Number(b.dataset.remove)
+
+  const updated=getCart().filter(
+   x=>x.id!==itemId
+  )
+
+  setCart(updated)
+  render()
  }
- const change=(id,d)=>{let c=getCart(),x=c.find(a=>a.id===Number(id));if(!x)return;x.qty+=d;if(x.qty<1)c=c.filter(a=>a.id!==Number(id));setCart(c);render()}
+})
+ }
+ const change=(id,d)=>{
+ let c=getCart()
+
+ const x=c.find(
+  a=>a.id===Number(id)
+ )
+
+ if(!x)return
+
+ x.qty+=d
+
+ if(x.qty<=0){
+  c=c.filter(
+   a=>a.id!==Number(id)
+  )
+ }
+
+ setCart(c)
+ render()
+}
  render();updateCartCount()
 }
 
