@@ -413,6 +413,17 @@ function checkoutPage(){
    const address=online?document.querySelector('#coAddress').value.trim():''
    const table=online?'':document.querySelector('#tableNumber').value.trim()
    if(!name||!phone||(online&&!address)||(!online&&!table)){document.querySelector('#checkoutMsg').innerHTML='<div class="message error">Lengkapi data pesanan terlebih dahulu.</div>';return}
+   if(!/^[0-9]{10,13}$/.test(phone)){
+ document.querySelector('#checkoutMsg').innerHTML=
+ '<div class="message error">Nomor HP harus 10–13 digit.</div>'
+ return
+}
+
+if(!online && !table){
+ document.querySelector('#checkoutMsg').innerHTML=
+ '<div class="message error">Nomor meja wajib diisi untuk makan di tempat.</div>'
+ return
+}
    if(online&&!document.querySelector('#paidConfirm')?.checked){document.querySelector('#checkoutMsg').innerHTML='<div class="message error">Konfirmasi pembayaran terlebih dahulu agar pesanan dapat dibuat.</div>';return}
    const sub=c.reduce((s,x)=>s+x.price*x.qty,0),del=online?(sub>=150000?0:15000):0
    const order={id:'MK-'+Date.now().toString().slice(-6),customerId:u.id,orderType:type,customer:{name,phone,address:address||u.address||'',email:u.email},tableNumber:table,items:c.map(x=>({id:x.id,name:x.name,category:x.category,price:x.price,qty:x.qty,img:x.img})),subtotal:sub,delivery:del,total:sub+del,payment,paid:online,paymentStatus:online?'Sudah Dibayar':'Belum Dibayar',status:'Pesanan sedang dibuat',date:new Date().toLocaleString('id-ID')}
