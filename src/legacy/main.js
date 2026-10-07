@@ -148,9 +148,51 @@ function home(){
 
 function menuPage(){
  document.querySelector('#app').innerHTML=`${nav()}<main class="inner-page"><section class="page-intro"><span class="eyebrow">Menu Makanin</span><h1>Choose what feels good.</h1><p>Pilihan makanan yang disiapkan segar setiap hari.</p></section>
- <div class="filters">${['Semua','Nasi','Mie','Ayam','Pizza & Burger','Dessert','Minuman'].map((x,i)=>`<button class="${i?'':'active'}" data-filter="${x}">${x}</button>`).join('')}</div><div class="food-grid menu-grid">${getFoods().map(foodCard).join('')}</div></main><div id="ulasanModal"></div>${footer()}`
- const render=(cat='Semua')=>{document.querySelector('.menu-grid').innerHTML=getFoods().filter(f=>cat==='Semua'||f.category===cat).map(foodCard).join('');bindFoodActions();document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===cat))}
- document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>render(b.dataset.filter));bindFoodActions();updateCartCount()
+ <div class="filters">${['Semua','Nasi','Mie','Ayam','Pizza & Burger','Dessert','Minuman'].map((x,i)=>`<button class="${i?'':'active'}" data-filter="${x}">${x}</button>`).join('')}</div><div class="menu-search">
+ <input id="menuSearch" type="search" placeholder="Cari nama makanan...">
+</div><div class="food-grid menu-grid">${getFoods().map(foodCard).join('')}</div></main><div id="ulasanModal"></div>${footer()}`
+let currentCategory='Semua'
+let currentSearch=''
+
+const render=()=>{
+ const foodsNow=getFoods().filter(f=>{
+  const matchCategory=
+   currentCategory==='Semua'||f.category===currentCategory
+
+  const matchSearch=
+   f.name.toLowerCase().includes(currentSearch.toLowerCase())
+
+  return matchCategory&&matchSearch
+ })
+
+ document.querySelector('.menu-grid').innerHTML=
+  foodsNow.length
+   ? foodsNow.map(foodCard).join('')
+   : '<div class="no-data">Menu yang dicari tidak ditemukan.</div>'
+
+ bindFoodActions()
+
+ document.querySelectorAll('[data-filter]').forEach(b=>{
+  b.classList.toggle(
+   'active',
+   b.dataset.filter===currentCategory
+  )
+ })
+}
+ document.querySelectorAll('[data-filter]').forEach(b=>{
+ b.onclick=()=>{
+  currentCategory=b.dataset.filter
+  render()
+ }
+})
+
+document.querySelector('#menuSearch').oninput=e=>{
+ currentSearch=e.target.value.trim()
+ render()
+}
+
+bindFoodActions()
+updateCartCount()
 }
 
 
