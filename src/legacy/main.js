@@ -369,9 +369,31 @@ function adminPage(){
   document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{location.hash=b.dataset.tab}))
   document.querySelector('#logout').onclick=()=>{localStorage.removeItem('makanin_admin');location.href='admin-login.html'}
   document.querySelectorAll('[data-status-id]').forEach(sel=>sel.addEventListener('change',()=>{
-   const list=getPesanan(),o=list.find(x=>String(x.id)===String(sel.dataset.statusId));
-   if(!o)return;o.status=sel.value;localStorage.setItem('makanin_orders',JSON.stringify(list));render()
-  }))
+   const list=getPesanan()
+   const o=list.find(x=>String(x.id)===String(sel.dataset.statusId))
+
+   if(!o)return
+
+   const validStatuses=[
+     'Pesanan sedang dibuat',
+     'Sedang diproses',
+     'Sedang diantar',
+     'Pesanan selesai',
+     'Dibatalkan'
+   ]
+
+   if(!validStatuses.includes(sel.value)){
+     alert('Status pesanan tidak valid.')
+     render()
+     return
+   }
+
+   o.status=sel.value
+
+   localStorage.setItem('makanin_orders',JSON.stringify(list))
+
+   render()
+}))
   document.querySelectorAll('[data-paid-id]').forEach(btn=>btn.addEventListener('click',()=>{
    const list=getPesanan(),o=list.find(x=>String(x.id)===String(btn.dataset.paidId));
    if(!o)return;o.paid=true;o.paymentStatus='Sudah Dibayar';localStorage.setItem('makanin_orders',JSON.stringify(list));render()
