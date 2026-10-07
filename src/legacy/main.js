@@ -148,9 +148,51 @@ function home(){
 
 function menuPage(){
  document.querySelector('#app').innerHTML=`${nav()}<main class="inner-page"><section class="page-intro"><span class="eyebrow">Menu Makanin</span><h1>Choose what feels good.</h1><p>Pilihan makanan yang disiapkan segar setiap hari.</p></section>
- <div class="filters">${['Semua','Nasi','Mie','Ayam','Pizza & Burger','Dessert','Minuman'].map((x,i)=>`<button class="${i?'':'active'}" data-filter="${x}">${x}</button>`).join('')}</div><div class="food-grid menu-grid">${getFoods().map(foodCard).join('')}</div></main><div id="ulasanModal"></div>${footer()}`
- const render=(cat='Semua')=>{document.querySelector('.menu-grid').innerHTML=getFoods().filter(f=>cat==='Semua'||f.category===cat).map(foodCard).join('');bindFoodActions();document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===cat))}
- document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>render(b.dataset.filter));bindFoodActions();updateCartCount()
+ <div class="filters">${['Semua','Nasi','Mie','Ayam','Pizza & Burger','Dessert','Minuman'].map((x,i)=>`<button class="${i?'':'active'}" data-filter="${x}">${x}</button>`).join('')}</div><div class="menu-search">
+ <input id="menuSearch" type="search" placeholder="Cari nama makanan...">
+</div><div class="food-grid menu-grid">${getFoods().map(foodCard).join('')}</div></main><div id="ulasanModal"></div>${footer()}`
+let currentCategory='Semua'
+let currentSearch=''
+
+const render=()=>{
+ const foodsNow=getFoods().filter(f=>{
+  const matchCategory=
+   currentCategory==='Semua'||f.category===currentCategory
+
+  const matchSearch=
+   f.name.toLowerCase().includes(currentSearch.toLowerCase())
+
+  return matchCategory&&matchSearch
+ })
+
+ document.querySelector('.menu-grid').innerHTML=
+  foodsNow.length
+   ? foodsNow.map(foodCard).join('')
+   : '<div class="no-data">Menu yang dicari tidak ditemukan.</div>'
+
+ bindFoodActions()
+
+ document.querySelectorAll('[data-filter]').forEach(b=>{
+  b.classList.toggle(
+   'active',
+   b.dataset.filter===currentCategory
+  )
+ })
+}
+ document.querySelectorAll('[data-filter]').forEach(b=>{
+ b.onclick=()=>{
+  currentCategory=b.dataset.filter
+  render()
+ }
+})
+
+document.querySelector('#menuSearch').oninput=e=>{
+ currentSearch=e.target.value.trim()
+ render()
+}
+
+bindFoodActions()
+updateCartCount()
 }
 
 
@@ -184,9 +226,38 @@ function registerPage(){
  document.querySelector('#registerForm').onsubmit=e=>{
   e.preventDefault()
   const emailEl=document.querySelector('#email'),passEl=document.querySelector('#password')
-  const email=emailEl.value.trim().toLowerCase(),pass=passEl.value
-  if(pass.length<8){document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>';return}
-  const users=getUsers()
+  const name=document.querySelector('#name').value.trim()
+const phone=document.querySelector('#phone').value.trim()
+const address=document.querySelector('#address').value.trim()
+const email=emailEl.value.trim().toLowerCase()
+const pass=passEl.value
+
+if(!name){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Nama lengkap wajib diisi.</div>'
+ return
+}
+
+if(!phone){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Nomor HP wajib diisi.</div>'
+ return
+}
+
+if(!/^[0-9]{10,13}$/.test(phone)){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Nomor HP harus 10–13 digit.</div>'
+ return
+}
+
+if(!address){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Alamat wajib diisi.</div>'
+ return
+}
+
+if(pass.length<8){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>'
+ return
+}
+
+const users=getUsers()
   if(users.some(u=>u.email===email)){document.querySelector('#formMsg').innerHTML='<div class="message error">Email sudah terdaftar.</div>';return}
   const u={id:Date.now(),name:document.querySelector('#name').value.trim(),phone:document.querySelector('#phone').value.trim(),address:document.querySelector('#address').value.trim(),email,password:pass}
   users.push(u);localStorage.setItem('makanin_users',JSON.stringify(users));localStorage.removeItem('makanin_current_user');localStorage.setItem('makanin_last_register_email',email);location.href='login.html'
