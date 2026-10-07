@@ -413,7 +413,56 @@ function adminPage(){
   document.querySelector('#foodModal').innerHTML=`<div class="modal-backdrop"><div class="modal admin-food-modal"><button type="button" class="modal-close" id="closeFood">×</button><span class="eyebrow">${isEdit?'Edit Menu':'Tambah Menu'}</span><h2>${isEdit?'Perbarui':'Tambah'} Menu Makanin</h2><form id="foodForm"><label>Nama menu<input id="foodName" required value="${safe(f?.name||'')}"></label><label>Kategori<select id="foodCategory"><option>Nasi</option><option>Mie</option><option>Ayam</option><option>Pizza & Burger</option><option>Dessert</option><option>Minuman</option></select></label><label>Harga<input id="foodPrice" type="number" min="0" required value="${Number(f?.price||0)}"></label><label>Stok<input id="foodStock" type="number" min="0" required value="${Number(f?.stock??20)}"></label><label>URL Gambar<input id="foodImg" type="url" required value="${safe(f?.img||'')}"></label><label>Deskripsi<textarea id="foodDesc" rows="3">${safe(f?.description||'')}</textarea></label><button type="submit" class="btn primary full">${isEdit?'Simpan Perubahan':'Tambah Menu'}</button></form></div></div>`
   if(f)document.querySelector('#foodCategory').value=f.category
   document.querySelector('#closeFood').onclick=()=>document.querySelector('#foodModal').innerHTML=''
-  document.querySelector('#foodForm').onsubmit=e=>{e.preventDefault();const list=getFoods();const data={id:isEdit?f.id:Date.now(),name:document.querySelector('#foodName').value.trim(),category:document.querySelector('#foodCategory').value,price:Number(document.querySelector('#foodPrice').value),stock:Number(document.querySelector('#foodStock').value),img:document.querySelector('#foodImg').value.trim(),description:document.querySelector('#foodDesc').value.trim(),rating:f?.rating||5,ulasan:f?.ulasan||[]};if(!data.name||!data.img||data.price<0)return;const idx=list.findIndex(x=>String(x.id)===String(data.id));if(idx>=0)list[idx]=data;else list.push(data);setFoods(list);localStorage.setItem('makanin_foods_version',String(Date.now()));document.querySelector('#foodModal').innerHTML='';render()}
+  document.querySelector('#foodForm').onsubmit=e=>{
+  e.preventDefault()
+
+  const list=getFoods()
+
+  const data={
+    id:isEdit?f.id:Date.now(),
+    name:document.querySelector('#foodName').value.trim(),
+    category:document.querySelector('#foodCategory').value,
+    price:Number(document.querySelector('#foodPrice').value),
+    stock:Number(document.querySelector('#foodStock').value),
+    img:document.querySelector('#foodImg').value.trim(),
+    description:document.querySelector('#foodDesc').value.trim(),
+    rating:f?.rating||5,
+    ulasan:f?.ulasan||[]
+  }
+
+  if(!data.name){
+    alert('Nama menu wajib diisi.')
+    return
+  }
+
+  if(!data.img){
+    alert('URL gambar menu wajib diisi.')
+    return
+  }
+
+  if(data.price<=0){
+    alert('Harga menu harus lebih dari 0.')
+    return
+  }
+
+  if(data.stock<0){
+    alert('Stok menu tidak boleh kurang dari 0.')
+    return
+  }
+
+  const idx=list.findIndex(x=>String(x.id)===String(data.id))
+
+  if(idx>=0){
+    list[idx]=data
+  }else{
+    list.push(data)
+  }
+
+  setFoods(list)
+  localStorage.setItem('makanin_foods_version',String(Date.now()))
+  document.querySelector('#foodModal').innerHTML=''
+  render()
+}
  }
  render();window.onhashchange=render
 }
