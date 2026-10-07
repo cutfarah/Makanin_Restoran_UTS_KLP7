@@ -207,12 +207,35 @@ function loginPage(){
 
 function adminMasukPage(){
  document.querySelector('#app').innerHTML=`<main class="admin-login"><div class="admin-login-card"><div class="form-brand">Makanin <small>ADMIN</small></div><h1>Dashboard Restoran</h1><p>Masuk menggunakan email admin untuk mengelola pesanan, pelanggan, menu, pembayaran, dan status pesanan.</p><form id="adminForm"><label>Email Admin<input id="adminEmail" type="email" required value="admin@makanin.id" placeholder="admin@makanin.id"></label><label>Kata sandi<input id="adminPass" type="password" minlength="8" required placeholder="Minimal 8 karakter"></label><button class="btn primary full">Masuk ke Dashboard</button></form><div class="demo">Akun demo · admin@makanin.id / admin1234</div><a class="back-link" href="index.html">Kembali ke Makanin</a></div></main>`
- document.querySelector('#adminForm').onsubmit=e=>{
+document.querySelector('#adminForm').onsubmit=e=>{
   e.preventDefault()
-  const email=document.querySelector('#adminEmail').value.trim().toLowerCase(),pass=document.querySelector('#adminPass').value
-  if(email==='admin@makanin.id'&&pass==='admin1234'){localStorage.setItem('makanin_admin','true');location.href='admin.html#dashboard'}
-  else document.querySelector('.demo').innerHTML='<span style="color:#b44">Email atau kata sandi admin salah.</span>'
- }
+
+  const email=document.querySelector('#adminEmail').value.trim().toLowerCase()
+  const pass=document.querySelector('#adminPass').value
+  const demo=document.querySelector('.demo')
+
+  if(!email){
+    demo.innerHTML='<span style="color:#b44">Email admin wajib diisi.</span>'
+    return
+  }
+
+  if(!pass){
+    demo.innerHTML='<span style="color:#b44">Kata sandi wajib diisi.</span>'
+    return
+  }
+
+  if(pass.length<8){
+    demo.innerHTML='<span style="color:#b44">Kata sandi minimal 8 karakter.</span>'
+    return
+  }
+
+  if(email==='admin@makanin.id'&&pass==='admin1234'){
+    localStorage.setItem('makanin_admin','true')
+    location.href='admin.html#dashboard'
+  }else{
+    demo.innerHTML='<span style="color:#b44">Email atau kata sandi admin salah.</span>'
+  }
+}
 }
 
 function profilePage(){
