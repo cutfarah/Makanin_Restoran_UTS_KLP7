@@ -184,11 +184,47 @@ function registerPage(){
  document.querySelector('#registerForm').onsubmit=e=>{
   e.preventDefault()
   const emailEl=document.querySelector('#email'),passEl=document.querySelector('#password')
-  const email=emailEl.value.trim().toLowerCase(),pass=passEl.value
-  if(pass.length<8){document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>';return}
-  const users=getUsers()
+  const name=document.querySelector('#name').value.trim()
+const phone=document.querySelector('#phone').value.trim()
+const address=document.querySelector('#address').value.trim()
+const email=emailEl.value.trim().toLowerCase()
+const pass=passEl.value
+
+if(!name){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Nama lengkap wajib diisi.</div>'
+ return
+}
+
+if(!phone){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Nomor HP wajib diisi.</div>'
+ return
+}
+
+if(!/^[0-9]{10,13}$/.test(phone)){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Nomor HP harus 10–13 digit.</div>'
+ return
+}
+
+if(!address){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Alamat wajib diisi.</div>'
+ return
+}
+
+if(pass.length<8){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>'
+ return
+}
+
+const users=getUsers()
   if(users.some(u=>u.email===email)){document.querySelector('#formMsg').innerHTML='<div class="message error">Email sudah terdaftar.</div>';return}
-  const u={id:Date.now(),name:document.querySelector('#name').value.trim(),phone:document.querySelector('#phone').value.trim(),address:document.querySelector('#address').value.trim(),email,password:pass}
+const u={
+ id:Date.now(),
+ name,
+ phone,
+ address,
+ email,
+ password:pass
+}
   users.push(u);localStorage.setItem('makanin_users',JSON.stringify(users));localStorage.removeItem('makanin_current_user');localStorage.setItem('makanin_last_register_email',email);location.href='login.html'
  }
 }
