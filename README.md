@@ -37,3 +37,13 @@ Aplikasi ini dikembangkan sebagai proyek UTS dengan fokus pada pengembangan fron
 - LocalStorage
 - Node.js
 - Docker
+
+## Docker Hub
+
+Docker image aplikasi frontend Makanin untuk tugas UTS.
+Docker Hub Repository: https://hub.docker.com/r/cutfarah/makanin
+Docker Image Tag: v1-UTS
+
+## Mengunduh Image
+
+docker pull cutfarah/makanin:v1-UTS
