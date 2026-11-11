@@ -159,7 +159,6 @@ function detailPage(){
  const f=getFoods().find(x=>x.id===id)||getFoods()[0]
  document.title=`${f.name} — Makanin`
  document.querySelector('#app').innerHTML=`${nav()}<main class="detail-page">
-   <a class="back-link" href="menu.html">Kembali ke menu</a>
    <section class="detail-layout">
     <div class="detail-image"><img src="${f.img}" alt="${f.name}"></div>
     <div class="detail-content">
@@ -172,7 +171,7 @@ function detailPage(){
       <div class="detail-info"><div><b>Disiapkan segar</b><span>Dibuat setelah dipesan</span></div><div><b>Porsi</b><span>1 porsi</span></div></div>
     </div>
    </section>
-   <section class="detail-reviews" id="ulasan"><div class="section-heading"><div><span class="eyebrow">Ulasan</span><h2>Ulasan pelanggan</h2></div><p>Pengalaman pelanggan setelah menikmati ${f.name}.</p></div>
+   <section class="detail-reviews" id="ulasan"><div class="section-heading"><div><span class="eyebrow">Ulasan</span><h2>Ulasan pelanggan</h2></div></div>
     <div class="review-list">${f.ulasan.map(r=>`<article class="ulasan"><div class="ulasan-head"><b>${r[0]}</b><span>★★★★★</span></div><p>${r[1]}</p></article>`).join('')}</div>
    </section>
  </main>${footer()}`
