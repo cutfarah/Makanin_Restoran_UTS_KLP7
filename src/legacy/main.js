@@ -210,6 +210,16 @@ if(!address){
  return
 }
 
+if(!email){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Email wajib diisi.</div>'
+ return
+}
+
+if(!/^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(email)){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Format email tidak valid. Contoh: nama@email.com</div>'
+ return
+}
+
 if(pass.length<8){
  document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>'
  return
