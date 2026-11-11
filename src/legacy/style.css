@@ -148,3 +148,53 @@ footer{background:#191816;color:#fff;padding:60px 6% 20px}.footer-inner{max-widt
 .single-status-control select{cursor:pointer}
 .status-buttons{display:none!important}
 @media(max-width:700px){.dashboard-order-links{display:block}.dashboard-order-links .admin-link{display:block;margin:4px 0}.admin-menu-category-head{align-items:start}.single-status-control{display:block}.single-status-control select{width:100%;box-sizing:border-box}.single-status-control .admin-paid-btn{margin-top:8px}}
+
+.menu-search {
+  width: min(520px, 100%);
+  margin: 0 auto 35px;
+  position: relative;
+}
+
+.menu-search::before {
+  content: "⌕";
+  position: absolute;
+  left: 17px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 23px;
+  color: #9b9187;
+  pointer-events: none;
+}
+
+.menu-search input {
+  width: 100%;
+  height: 48px;
+  padding: 0 18px 0 48px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.menu-search input::placeholder {
+  color: #aaa198;
+}
+
+.menu-search input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(183, 101, 56, .10);
+}
+
+@media (max-width: 600px) {
+  .menu-search {
+    margin-bottom: 25px;
+  }
+
+  .menu-search input {
+    height: 45px;
+  }
+}

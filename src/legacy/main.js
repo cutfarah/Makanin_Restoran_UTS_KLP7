@@ -97,7 +97,7 @@ function nav(){
 function footer(){
  return `<footer><div class="footer-inner"><div><a class="logo light" href="index.html"><span class="logo-mark">M</span><span>Makanin<small>RESTAURANT</small></span></a><p>Makanan enak yang dibuat dengan perhatian. Tempat makan yang nyaman untuk berbagai momen.</p></div>
  <div><h4>Jelajahi</h4><a href="menu.html">Menu</a><a href="index.html#explore">Restoran</a><a href="index.html#ulasan">Ulasan</a></div>
- <div><h4>Pelanggan</h4><a href="register.html">Daftar Akun</a><a href="login.html">Masuk</a><a href="orders.html">Pesanan Saya</a><a href="profile.html">Profil Saya</a><a href="admin-login.html">Login Admin</a></div>
+ <div><h4>Pelanggan</h4><a href="register.html">Daftar Akun</a><a href="login.html">Masuk</a><a href="orders.html">Pesanan Saya</a><a href="profile.html">Profil Saya</a></div>
  <div><h4>Kunjungi Kami</h4><p>Jl. Teuku Umar No. 18<br>Banda Aceh, Indonesia</p><p>10.00 — 22.00 setiap hari</p></div></div><div class="footer-bottom">© 2026 Makanin Restaurant · Prototype Frontend</div></footer>`
 }
 
@@ -251,6 +251,16 @@ if(!address){
  return
 }
 
+if(!email){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Email wajib diisi.</div>'
+ return
+}
+
+if(!/^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(email)){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Format email tidak valid. Contoh: nama@email.com</div>'
+ return
+}
+
 if(pass.length<8){
  document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>'
  return
@@ -272,7 +282,7 @@ const u={
 
 function loginPage(){
  const rememberedEmail=escapeHtml(localStorage.getItem('makanin_last_register_email')||'')
- document.querySelector('#app').innerHTML=`${nav()}<main class="auth-wrap"><div class="auth-panel single"><div class="form-card"><div class="form-brand">Makanin</div><h2>Selamat datang kembali</h2><p class="form-muted">Masuk untuk melihat pesanan dan melanjutkan pemesanan.</p><form id="loginForm"><label>Email<input id="loginEmail" type="email" value="${rememberedEmail}" required placeholder="nama@email.com"></label><label>Kata sandi<input id="loginPassword" type="password" minlength="8" required placeholder="Minimal 8 karakter"></label><button class="btn primary full">Masuk</button></form><div id="formMsg"></div><div class="or">atau</div><a class="btn outline full" href="admin-login.html">Masuk sebagai Admin</a><p class="switch">Belum punya akun? <a href="register.html">Daftar sekarang</a></p></div></div></main>${footer()}`
+ document.querySelector('#app').innerHTML=`${nav()}<main class="auth-wrap"><div class="auth-panel single"><div class="form-card"><div class="form-brand">Makanin</div><h2>Selamat datang kembali</h2><p class="form-muted">Masuk untuk melihat pesanan dan melanjutkan pemesanan.</p><form id="loginForm"><label>Email<input id="loginEmail" type="email" value="${rememberedEmail}" required placeholder="nama@email.com"></label><label>Kata sandi<input id="loginPassword" type="password" minlength="8" required placeholder="Minimal 8 karakter"></label><button class="btn primary full">Masuk</button></form><div id="formMsg"></div><p class="switch">Belum punya akun? <a href="register.html">Daftar sekarang</a></p></div></div></main>${footer()}`
  document.querySelector('#loginForm').onsubmit=e=>{
   e.preventDefault()
   const email=document.querySelector('#loginEmail').value.trim().toLowerCase(),pass=document.querySelector('#loginPassword').value
