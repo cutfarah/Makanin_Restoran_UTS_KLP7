@@ -221,7 +221,7 @@ function detailPage(){
  updateCartCount()
 }
 function registerPage(){
- document.querySelector('#app').innerHTML=`${nav()}<main class="auth-wrap"><div class="auth-panel"><div class="auth-copy"><span class="eyebrow">Selamat datang di Makanin</span><h1>Make your next meal a little easier.</h1><p>Buat akun customer untuk menyimpan data dan melihat riwayat pesanan.</p></div><div class="form-card"><div class="form-brand">Makanin</div><h2>Daftar Akun</h2><p class="form-muted">Lengkapi data kamu untuk mulai memesan.</p><form id="registerForm"><label>Nama lengkap<input id="name" required placeholder="Nama lengkap"></label><label>No. HP<input id="phone" required placeholder="08xxxxxxxxxx"></label><label>Alamat<textarea id="address" required rows="3" placeholder="Alamat lengkap"></textarea></label><label>Email<input id="email" type="email" required placeholder="nama@email.com"></label><label>Kata sandi<input id="password" type="password" minlength="8" required placeholder="Minimal 8 karakter"></label><button class="btn primary full">Daftar Akun</button></form><p class="switch">Sudah punya akun? <a href="login.html">Masuk</a></p><div id="formMsg"></div></div></div></main>${footer()}`
+ document.querySelector('#app').innerHTML=`${nav()}<main class="auth-wrap"><div class="auth-panel"><div class="auth-copy"><span class="eyebrow">Selamat datang di Makanin</span><h1>Make your next meal a little easier.</h1><p>Buat akun customer untuk menyimpan data dan melihat riwayat pesanan.</p></div><div class="form-card"><div class="form-brand">Makanin</div><h2>Daftar Akun</h2><p class="form-muted">Lengkapi data kamu untuk mulai memesan.</p><form id="registerForm"><label>Nama lengkap<input id="name" required placeholder="Nama lengkap"></label><label>No. HP<input id="phone" required placeholder="08xxxxxxxxxx"></label><label>Alamat<textarea id="address" required rows="3" placeholder="Alamat lengkap"></textarea></label><label>Email<input id="email" type="email" required placeholder="nama@email.com"></label><label>Kata sandi<input id="password" type="password" minlength="8" required placeholder="Minimal 8 karakter"></label><label>Konfirmasi kata sandi<input id="passwordConfirm" type="password" minlength="8" required placeholder="Ulangi kata sandi"></label><button class="btn primary full">Daftar Akun</button></form><p class="switch">Sudah punya akun? <a href="login.html">Masuk</a></p><div id="formMsg"></div></div></div></main>${footer()}`
  document.querySelector('#registerForm').onsubmit=e=>{
   e.preventDefault()
   const emailEl=document.querySelector('#email'),passEl=document.querySelector('#password')
@@ -263,6 +263,11 @@ if(!/^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(email)){
 
 if(pass.length<8){
  document.querySelector('#formMsg').innerHTML='<div class="message error">Kata sandi minimal 8 karakter.</div>'
+ return
+}
+
+if(pass!==document.querySelector('#passwordConfirm').value){
+ document.querySelector('#formMsg').innerHTML='<div class="message error">Konfirmasi kata sandi tidak cocok.</div>'
  return
 }
 
